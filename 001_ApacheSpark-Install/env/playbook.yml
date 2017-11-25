@@ -13,20 +13,20 @@
         state: latest
         install_recommends: no
 
-    - name: Install sbt
+    - name: Install sbt 1
       shell: echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
 
-    - name: Add sbt apt key 
+    - name: Install sbt 2 Add sbt apt key 
       apt_key:
         keyserver: hkp://keyserver.ubuntu.com:80
         id: 2EE0EA64E40A89B84B2DF73499E82A75642AC823
 
-    - name: Update and upgrade apt packages
+    - name: Install sbt 3 Update and upgrade apt packages
       apt:
         upgrade: yes
         update_cache: yes
 
-    - name: Install sbt
+    - name: Install sbt 4
       apt:
         name: sbt
         state: latest
@@ -40,4 +40,22 @@
     - name: Unarchive tgz
       unarchive:
         src: /tmp/spark-2.2.0-bin-hadoop2.7.tgz
-        dest: /opt
+        dest: /usr/local/
+    
+    - name: Create link
+      file:
+        src: /usr/local/spark-2.2.0-bin-hadoop2.7/
+        dest: /usr/local/spark
+        state: link
+    
+    - name: Setting Path SPARK_HOME
+      lineinfile:
+        path: ~/.bashrc
+        line: 'export SPARK_HOME=/usr/local/spark'
+      become_user: ubuntu
+
+    - name: Setting Path spark to PATH
+      lineinfile:
+        path: ~/.bashrc
+        line: 'export PATH=$PATH:$SPARK_HOME/bin'
+      become_user: ubuntu
