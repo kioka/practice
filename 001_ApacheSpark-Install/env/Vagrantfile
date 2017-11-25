@@ -5,6 +5,7 @@ apt-get install software-properties-common -y
 apt-add-repository ppa:ansible/ansible
 apt-get update
 apt-get install ansible -y
+ansible-playbook -i localhost, -c local /vagrant/playbook.yml
 SCRIPT
 
 Vagrant.configure("2") do |config|

@@ -1,0 +1,37 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install Java
+      apt:
+        name: openjdk-8-jdk
+        state: latest
+        install_recommends: no
+
+    - name: Install sbt
+      shell: echo "deb https://dl.bintray.com/sbt/debian /" | tee -a /etc/apt/sources.list.d/sbt.list
+
+    - name: Add sbt apt key 
+      apt_key:
+        keyserver: hkp://keyserver.ubuntu.com:80
+        id: 2EE0EA64E40A89B84B2DF73499E82A75642AC823
+
+    - name: Update and upgrade apt packages
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install sbt
+      apt:
+        name: sbt
+        state: latest
+        install_recommends: no
+
+    - name: Download Apache Spark
+      get_url:
+        url: http://ftp.jaist.ac.jp/pub/apache/spark/spark-2.2.0/spark-2.2.0-bin-hadoop2.7.tgz
+        dest: /tmp
+  
+    - name: Unarchive tgz
+      unarchive:
+        src: /tmp/spark-2.2.0-bin-hadoop2.7.tgz
+        dest: /opt
