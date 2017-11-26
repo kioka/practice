@@ -1,0 +1,17 @@
+# Install Ansible script
+$script = <<SCRIPT
+apt-get update
+apt-get install software-properties-common -y
+apt-add-repository ppa:ansible/ansible
+apt-get update
+apt-get install ansible -y
+ansible-playbook -i localhost, -c local /vagrant/playbook.yml
+SCRIPT
+
+Vagrant.configure("2") do |config|
+  # Ubuntu 16.04 LTS
+  config.vm.box = "ubuntu/xenial64"
+
+  # Install Ansible
+  config.vm.provision "shell", inline: $script
+end

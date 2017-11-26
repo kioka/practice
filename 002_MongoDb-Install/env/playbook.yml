@@ -1,0 +1,31 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install MongoDB 1 Import the public key used by the package management system.
+      apt_key:
+        keyserver: hkp://keyserver.ubuntu.com:80
+        id: 0C49F3730359A14518585931BC711F9BA15703C6
+
+    - name: Install MongoDB 2 Create a list file for MongoDB.
+      shell: echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+
+    - name: Install MongoDB 3 Reload local package database.
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install MongoDB 4 Install the MongoDB packages.
+      apt:
+        name: mongodb-org
+        state: latest
+        install_recommends: no
+
+    - name: Setup service
+      service:
+        name: mongod
+        enabled: yes
+
+    - name: Start service
+      service:
+        name: mongod
+        state: started
