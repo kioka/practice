@@ -59,3 +59,22 @@
         path: ~/.bashrc
         line: 'export PATH=$PATH:$SPARK_HOME/bin'
       become_user: ubuntu
+
+    - name: Download Apache Kafka
+      get_url:
+        url: http://ftp.jaist.ac.jp/pub/apache/kafka/1.0.0/kafka_2.11-1.0.0.tgz
+        dest: ~/
+      become_user: ubuntu
+
+    - name: Unarchive tgz
+      unarchive:
+        src: ~/kafka_2.11-1.0.0.tgz
+        dest: ~/
+      become_user: ubuntu
+
+    - name: Create link
+      file:
+        src: ~/kafka_2.11-1.0.0/
+        dest: ~/kafka
+        state: link
+      become_user: ubuntu
